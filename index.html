@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>
         Domain-Whois_App
@@ -10,6 +9,13 @@
 </head>
 
 <body>
+    <div class="search-bar-container">
+        <form onsubmit="searchDomain(); return false;">
+            <label for="searchText" class="search-label">Search Domain:</label>
+            <input type="search" id="searchText" name="searchText" class="search-input" placeholder="Type the domain you want" autocomplete="off">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
     <div>
         <label onclick="showOptions()">Domain ▼</label>
         <br>
@@ -27,21 +33,13 @@
             <div class="option">Find a Domain Owner (WHOIS)</div>
         </div>
         <br>
-    </div>
-    <div class="right-section">
-    <div class="emailoption">
-        <label>EMAIL</label>
-    </div>
-    <div>
-                <input type ="button" value="help" class="help-button" onclick="searchDomain()">
-    </div>
+    
+   
+
     <div>
                 <input type ="button" value="Sign IN" class="signIn-button" onclick="searchDomain()">
     </div>
-    <div>
-        <input type="search" autocomplete="off"  name="searchText" placeholder="Type the domain you want">
-    </div>
- 
+   
     <div>
         <input type="button" value="Contact Us" class="contactus" onclick="searchDomain()">
     </div>

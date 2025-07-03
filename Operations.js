@@ -5,6 +5,5 @@
     }
 
     function searchDomain() {
-      // Dummy function to prevent errors. Implement your logic here.
-      alert('This is a placeholder for the searchDomain function.');
+      window.open("Result.html", "_blank");
     }
