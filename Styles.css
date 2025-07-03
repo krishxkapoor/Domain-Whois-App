@@ -1,3 +1,4 @@
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: linear-gradient(135deg, #181818 60%, #232323 100%);
@@ -7,7 +8,6 @@ body {
     min-height: 100vh;
 }
 
-/* Main container spacing */
 div {
     margin-bottom: 20px;
 }
@@ -62,11 +62,6 @@ label:hover {
     box-shadow: 0 2px 8px rgba(0,191,174,0.15);
 }
 
-.emailoption label {
-    color: #ffb300;
-    font-size: 1.1em;
-    letter-spacing: 0.5px;
-}
 
 input[type="button"], .help-button, .signIn-button, .contactus {
     background: linear-gradient(90deg, #00bfae 60%, #00a3a3 100%);
@@ -113,13 +108,11 @@ input[type="search"]:focus {
     text-align: center;
     margin: 36px 0 18px 0;
 }
-/* Show domain options when active (to be toggled by JS) */
 .domain-options.active {
     display: block;
     animation: fadeIn 0.4s;
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
     input[type="search"] {
         width: 95%;
