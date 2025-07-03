@@ -1,13 +1,10 @@
  
     function showOptions() {
       const box = document.getElementById("domainOptions");
-      box.style.display = box.style.display === "none" ? "block" : "none";
+      box.classList.toggle("active");
     }
-    function showOptions() {
-      const box = document.getElementById("websiteshosting-options");
-      box.style.display = box.style.display === "none" ? "block" : "none";
-    }
-    function showOptions() {
-      const box = document.getElementById("securityoption");
-      box.style.display = box.style.display === "none" ? "block" : "none";
+
+    function searchDomain() {
+      // Dummy function to prevent errors. Implement your logic here.
+      alert('This is a placeholder for the searchDomain function.');
     }
