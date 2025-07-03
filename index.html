@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>
         Domain-Whois_App
@@ -10,6 +9,13 @@
 </head>
 
 <body>
+    <div class="search-bar-container">
+        <form onsubmit="searchDomain(); return false;">
+            <label for="searchText" class="search-label">Search Domain:</label>
+            <input type="search" id="searchText" name="searchText" class="search-input" placeholder="Type the domain you want" autocomplete="off">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
     <div>
         <label onclick="showOptions()">Domain ▼</label>
         <br>
@@ -32,22 +38,11 @@
         <label>EMAIL</label>
     </div>
     <div>
-                <input type ="button" value="help" class="help-button" onclick="searchDomain()">
+                <input type ="button" value="Sign IN" class="signIn-button" >
     </div>
+
     <div>
-                <input type ="button" value="Sign IN" class="signIn-button" onclick="searchDomain()">
-    </div>
-    <div>
-        <input type="search" autocomplete="off"  name="searchText" placeholder="Type the domain you want">
-    </div>
- <div class="logo-container">
-      <img 
-        src="https://img1.wsimg.com/cdnassets/m/47629b21accd6a6c/original/GODADDY_AIRO_LOGO_WHITE.svg" 
-        alt="GoDaddy Logo" 
-        class="promo-logo">
-    </div>
-    <div>
-        <input type="button" value="Contact Us" class="contactus" onclick="searchDomain()">
+        <input type="button" value="Contact Us" class="contactus" ">
     </div>
 </body>
 
