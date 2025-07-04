@@ -10,16 +10,24 @@
 </head>
 
 <body>
-    <div class="search-bar-container">
-        <form onsubmit="searchDomain(); return false;">
-            <label for="searchText" class="search-label">Search Domain:</label>
-            <input type="search" id="searchText" name="searchText" class="search-input"
-                placeholder="Type the domain you want" autocomplete="off">
-            <button type="submit" class="search-button">Search</button>
-        </form>
-    </div>
+<div class="search-bar-container">
+  <form role="search" onsubmit="searchDomain(); return false;">
+    <label for="searchText" class="search-label">Search Domain:</label>
+    <input
+      type="search"
+      id="searchText"
+      name="searchText"
+      class="search-input"
+      placeholder="Type the domain you want"
+      autocomplete="off"
+      aria-label="Search for a domain"
+      required>
+    <button type="submit" class="search-button">Search</button>
+  </form>
+</div>
+
     <div>
-        <label onclick="showOptions()">Domain ▼</label>
+        <label onclick="showOptions()" class="domain">Domain ▼</label>
         <br>
         <div class="domain-options" id="domainOptions">
             <label>FIND A DOMAIN</label>
