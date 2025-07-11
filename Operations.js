@@ -3,94 +3,82 @@ function showOptions() {
   box.classList.toggle("active");
 }
 
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
+function showError(message) {
+  const modal = document.getElementById("error-modal");
+  const text = document.getElementById("error-text");
+  const closeBtn = document.getElementById("error-close-btn");
 
-function showValidationMessage(message) {
-  const msgDiv = document.getElementById("validationMessage");
-  if (!msgDiv) return;
-  msgDiv.textContent = message;
-  msgDiv.style.display = "block";
-  setTimeout(() => {
-    msgDiv.style.display = "none";
-  }, 3500);
-}
+  text.textContent = message;
+  modal.hidden = false;
 
-const allowedExtensions = [".com", ".net", ".org", ".edu", ".in", ".co", ".io", ".gov", ".info"];
+  closeBtn.onclick = () => {
+    modal.hidden = true;
+  };
 
-function isValidDomain(domain) {
-  domain = domain.toLowerCase();
-
-  const validChars = /^[a-z0-9.-]+$/;
-  if (!validChars.test(domain)) return false;
-
-  return allowedExtensions.some(ext => domain.endsWith(ext));
+  window.onclick = (e) => {
+    if (e.target === modal) {
+      modal.hidden = true;
+    }
+  };
 }
 
 function searchDomain() {
-  const domainInput = document.getElementById("domainInput");
-  const domain = domainInput.value.trim();
+  const input = document.getElementById("domainInput");
+  const domain = input.value.trim().toLowerCase();
 
-  if (!isValidDomain(domain)) {
-    showValidationMessage(
-      `Please enter a valid domain ending with: ${allowedExtensions.join(", ")}`
-    );
-    return false;
+  if (!domain) {
+    showError("Please enter a domain.");
+    return;
+  }
+
+  const pattern = /^[a-z0-9-]+\.(com|net|org|in|co|edu|io|ai|dev|xyz|gov)$/i;
+  if (!pattern.test(domain)) {
+    showError("Enter a valid domain with one of these TLDs: .com, .net, .org, .in, .io, .ai, etc.");
+    return;
   }
 
   window.location.href = `result.html?domain=${encodeURIComponent(domain)}`;
 }
 
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 8000 } = options;
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+async function fetchDomainStatus(domain) {
+  const url = `https://domainr.p.rapidapi.com/v2/status?domain=${encodeURIComponent(domain)}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '9623a25903mshab304f78713f032p10930djsn6ae4371fd164',
+      'X-RapidAPI-Host': 'domainr.p.rapidapi.com'
+    }
   });
-  clearTimeout(id);
-  return response;
+
+  if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+  const data = await response.json();
+  return data.status[0]?.status;
 }
 
 window.onload = async function () {
   const resultDiv = document.getElementById("result");
-  if (!resultDiv) return;
+  const domain = getQueryParam("domain");
 
-  let domain = getQueryParam("domain");
-  if (!domain) {
-    resultDiv.innerHTML = `<p style="color:#ff5252;">❌ No domain specified.</p>`;
-    return;
-  }
+  if (domain && resultDiv) {
+    resultDiv.innerHTML = `<p>🔍 Checking availability for <strong>${domain}</strong>...</p>`;
 
-  domain = domain.trim().replace(/^www\./i, "");
-  resultDiv.innerHTML = `<p>🔍 Checking availability for <strong>${domain}</strong>...</p>`;
+    try {
+      const status = await fetchDomainStatus(domain);
 
-  try {
-    const response = await fetchWithTimeout(
-      `https://api.domainsdb.info/v1/domains/search?domain=${encodeURIComponent(domain)}`,
-      { timeout: 15000 }
-    );
-
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-
-    const data = await response.json();
-
-    const isTaken =
-      data.domains &&
-      data.domains.some(
-        (d) => d.domain.toLowerCase() === domain.toLowerCase()
-      );
-
-    if (isTaken) {
-      resultDiv.innerHTML = `<h3 style="color:#ff5252;">❌ The domain <strong>${domain}</strong> is already taken.</h3>`;
-    } else {
-      resultDiv.innerHTML = `<h3 style="color:#4caf50;">✅ The domain <strong>${domain}</strong> is available!</h3>`;
+      if (status.includes("inactive") || status.includes("undelegated") || status.includes("available")) {
+        resultDiv.innerHTML = `<h3 style="color:green;">✅ ${domain} is available!</h3>`;
+      } else {
+        resultDiv.innerHTML = `<h3 style="color:red;">❌ ${domain} is already taken.</h3>`;
+      }
+    } catch (error) {
+      console.error(error);
+      resultDiv.innerHTML = `<p style="color:orange;">⚠️ Error fetching data: ${error.message}</p>`;
     }
-  } catch (error) {
-    console.error(error);
-    resultDiv.innerHTML = `<p style="color:#ffa726;">⚠️ Could not fetch domain info: ${error.message}</p>`;
   }
 };
