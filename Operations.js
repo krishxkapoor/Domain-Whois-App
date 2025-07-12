@@ -1,54 +1,84 @@
- 
-    function showOptions() {
-      const box = document.getElementById("domainOptions");
-      box.classList.toggle("active");
+function showOptions() {
+  const box = document.getElementById("domainOptions");
+  box.classList.toggle("active");
+}
+
+function showError(message) {
+  const modal = document.getElementById("error-modal");
+  const text = document.getElementById("error-text");
+  const closeBtn = document.getElementById("error-close-btn");
+
+  text.textContent = message;
+  modal.hidden = false;
+
+  closeBtn.onclick = () => {
+    modal.hidden = true;
+  };
+
+  window.onclick = (e) => {
+    if (e.target === modal) {
+      modal.hidden = true;
     }
+  };
+}
 
-    function searchDomain() {
-      window.open("Result.html", "_blank");
-    }
-/*
-const apiKey = "YOUR_ABSTRACT_API_KEY";  // Replace with your key
+function searchDomain() {
+  const input = document.getElementById("domainInput");
+  const domain = input.value.trim().toLowerCase();
 
-async function searchDomain() {
-  const domainInput = document.getElementById("domainInput").value.trim();
-  const resultBox = document.getElementById("result");
-  const altBox = document.getElementById("alternatives");
-
-  if (!domainInput) {
-    resultBox.innerHTML = "❗ Please enter a domain name.";
-    altBox.innerHTML = "";
+  if (!domain) {
+    showError("Please enter a domain.");
     return;
   }
 
-  resultBox.innerHTML = "🔍 Checking availability...";
-  altBox.innerHTML = "";
-
-  try {
-    const res = await fetch(`https://whois.abstractapi.com/v1/?api_key=${apiKey}&domain=${domainInput}`);
-    const data = await res.json();
-
-    if (data.domain_status === "available") {
-      resultBox.innerHTML = `✅ Great news! <strong>${domainInput}</strong> is available!`;
-    } else {
-      resultBox.innerHTML = `❌ Sorry, <strong>${domainInput}</strong> is already taken.`;
-
-      // Suggest alternatives
-      const base = domainInput.split(".")[0];
-      const suggestions = [".net", ".in", ".org", ".co", ".info"];
-      let html = "<br><strong>Try alternatives:</strong><ul>";
-
-      suggestions.forEach(ext => {
-        html += `<li>${base}${ext}</li>`;
-      });
-
-      html += "</ul>";
-      altBox.innerHTML = html;
-    }
-  } catch (err) {
-    console.error(err);
-    resultBox.innerHTML = "❌ Error checking domain. Try again.";
+  const pattern = /^[a-z0-9-]+\.(com|net|org|in|co|edu|io|ai|dev|xyz|gov)$/i;
+  if (!pattern.test(domain)) {
+    showError("Enter a valid domain with one of these TLDs: .com, .net, .org, .in, .io, .ai, etc.");
+    return;
   }
+
+  window.location.href = `result.html?domain=${encodeURIComponent(domain)}`;
 }
 
-*/
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+async function fetchDomainStatus(domain) {
+  const url = `https://domainr.p.rapidapi.com/v2/status?domain=${encodeURIComponent(domain)}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '9623a25903mshab304f78713f032p10930djsn6ae4371fd164',
+      'X-RapidAPI-Host': 'domainr.p.rapidapi.com'
+    }
+  });
+
+  if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+  const data = await response.json();
+  return data.status[0]?.status;
+}
+
+window.onload = async function () {
+  const resultDiv = document.getElementById("result");
+  const domain = getQueryParam("domain");
+
+  if (domain && resultDiv) {
+    resultDiv.innerHTML = `<p>🔍 Checking availability for <strong>${domain}</strong>...</p>`;
+
+    try {
+      const status = await fetchDomainStatus(domain);
+
+      if (status.includes("inactive") || status.includes("undelegated") || status.includes("available")) {
+        resultDiv.innerHTML = `<h3 style="color:green;">✅ ${domain} is available!</h3>`;
+      } else {
+        resultDiv.innerHTML = `<h3 style="color:red;">❌ ${domain} is already taken.</h3>`;
+      }
+    } catch (error) {
+      console.error(error);
+      resultDiv.innerHTML = `<p style="color:orange;">⚠️ Error fetching data: ${error.message}</p>`;
+    }
+  }
+};

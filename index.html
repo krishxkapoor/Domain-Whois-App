@@ -1,48 +1,70 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>
-        Domain-Whois_App
-    </title>
-    <link rel="stylesheet" href="Styles.css">
-    <script src="Operations.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Domain Whois App</title>
+  <link rel="stylesheet" href="Styles.css" />
+  <script src="Operations.js" defer></script>
 </head>
-
 <body>
-    <div class="search-bar-container">
-        <form onsubmit="searchDomain(); return false;">
-            <label for="searchText" class="search-label">Search Domain:</label>
-            <input type="search" id="searchText" name="searchText" class="search-input"
-                placeholder="Type the domain you want" autocomplete="off">
-            <button type="submit" class="search-button">Search</button>
-        </form>
+  <header class="header">
+    <div class="logo-title">
+      <img src="https://img.icons8.com/ios-filled/50/00bfae/domain.png" alt="Domain Whois Logo" class="logo" />
+      <span class="site-title">Domain Whois App</span>
     </div>
-    <div>
-        <label onclick="showOptions()">Domain ▼</label>
-        <br>
-        <div class="domain-options" id="domainOptions">
-            <label>FIND A DOMAIN</label>
-            <div class="option">Search for Domain Names</div>
-            <div class="option">Transfer Domain Names</div>
-            <br>
-            <label>Auctions For Domain</label>
-            <div class="option">Auctions for Domain Names</div>
-            <div class="option">Sale Domain Name</div>
-            <br>
-            <label>Domain Tools and Services</label>
-            <div class="option">Generate Domain Names</div>
-            <div class="option">Find a Domain Owner (WHOIS)</div>
-        </div>
-        <br>
-    </div>
+    <nav class="main-nav">
 
-    <div>
-        <input type="button" value="Sign IN" class="signIn-button" ">
+    </nav>
+  </header>
+
+  <main>
+    <section id="search" class="search-section glass-card">
+      <form role="search" onsubmit="searchDomain(); return false;" class="search-form" novalidate>
+        <label for="domainInput" class="search-label">Search Domain:</label>
+        <input
+          type="search"
+          id="domainInput"
+          name="searchText"
+          class="search-input"
+          placeholder="Type the domain you want"
+          autocomplete="off"
+          aria-label="Search for a domain"
+          required
+        />
+        <button type="submit" class="search-button">Search</button>
+      </form>
+    </section>
+
+    <section id="tools" class="domain-options-section glass-card">
+      <label onclick="showOptions()" class="domain">Domain <span>▼</span></label>
+      <div id="domainOptions" class="domain-options">
+        <label>FIND A DOMAIN</label>
+        <div class="option">Search for Domain Names</div>
+        <div class="option">Transfer Domain Names</div>
+        <label>Auctions For Domain</label>
+        <div class="option">Auctions for Domain Names</div>
+        <div class="option">Sale Domain Name</div>
+        <label>Domain Tools and Services</label>
+        <div class="option">Generate Domain Names</div>
+        <div class="option">Find a Domain Owner (WHOIS)</div>
+      </div>
+    </section>
+
+    <section class="auth-contact-section">
+      <button class="signIn-button" type="button">Sign In</button>
+      <button class="contactus" type="button" id="contact">Contact Us</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 Domain Whois App. All rights reserved.</p>
+  </footer>
+  <div id="error-modal" class="error-modal" hidden>
+    <div class="error-modal-content">
+      <p id="error-text"></p>
+      <button id="error-close-btn">Close</button>
     </div>
-    <div>
-        <input type=" button1" value="Contact Us" class="contactus" ">
-    </div>
+  </div>
 </body>
-
 </html>
